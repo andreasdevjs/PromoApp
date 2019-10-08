@@ -1,0 +1,26 @@
+<template>
+    <lightning-card title="Promociones" icon-name="custom:custom9">
+        <lightning-button label="Resetear" slot="actions" onclick={handleClicResetear}></lightning-button>
+
+        <!-- Componente con la información de la promoción -->
+        <c-info-promo oninfoguardada={handleInfoGuardada}></c-info-promo>
+
+        <template if:true={mostrarReglasPromocion}>
+            <!-- Componente con la lógica de la promoción -->
+            <c-logica-promo onreglacreada={handleReglaCreada}></c-logica-promo>
+        </template>
+        
+        <template if:true={mostrarBotonCrearPromocion}>
+            <div class="slds-align_absolute-center" style="height:5rem">
+                <button class="crear-promo" onclick={handleCrearPromocion}>¡Crear Promoción!</button> <br>
+                <template if:true={mostrarLoader}>
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </template>
+            </div>
+            <template if:true={mostrarError}>
+                <p>{error}</p>
+            </template>
+        </template>
+        
+    </lightning-card>
+</template>
