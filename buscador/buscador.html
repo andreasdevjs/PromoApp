@@ -1,0 +1,34 @@
+<template>
+
+    <lightning-input
+        type="search"
+        placeholder="Ej. Bicicletas"
+        onchange={handleChangeBuscarCategoria}
+        value={textoIntroducido}
+        class="slds-m-bottom_small"
+        label="Escriba y encuentre la categoría o subcategorías"
+    ></lightning-input>
+
+    <template for:each={categoriasEncontradas} for:item="categoria">
+        <li 
+            class="resultado" 
+            data-value={categoria.name} 
+            onclick={handleClicCategoria} 
+            key={categoria.idLevel}
+        >
+            {categoria.name}
+        </li>
+    </template>
+
+    <h3 class="cat-seleccionadas">Has seleccionado: </h3>
+
+    <template for:each={categoriasSeleccionadas} for:item="categoria">
+        <lightning-pill
+            key={categoria.nombre} 
+            label={categoria.nombre}
+            data-value={categoria.nombre}
+            onremove={handleRemoveCategoriaSeleccionada}
+        ></lightning-pill>
+    </template>
+
+</template>

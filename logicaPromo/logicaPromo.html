@@ -1,0 +1,74 @@
+<template>
+
+    <div class="slds-p-around_x-small">
+
+        <div class="slds-p-around_x-small">
+            <h1>Reglas de la Promoción</h1>
+        </div>
+
+        <div class="slds-box slds-m-around_medium slds-theme_shade">
+            <lightning-helptext content="Este ejemplo se irá actualizando conforme se vayan introduciendo cambios en la promoción, es decir, tendrás un ejemplo de cada tipo de promoción para inspirarte."></lightning-helptext>
+            <h3 class="alin-center"><strong>Ejemplo de promoción:</strong></h3> <br>
+            <p class="slds-m-top_x-small">{ejemplo}</p>
+        </div>
+
+        <div class="slds-p-around_x-small borde slds-m-bottom_medium">
+            <div class="slds-grid slds-gutters slds-align_absolute-center">
+                <div class="slds-col mt-10 text-center">
+                    <h2 class="tipo-promocion">Seleccione el tipo de promoción</h2>
+                </div>
+                <div class="slds-col">
+                    <lightning-combobox
+                        label="Tipo de promoción"
+                        name="progress"
+                        value={tipoPromocion}
+                        placeholder="Elige el tipo de promoción"
+                        options={opcionesPromocion}
+                        onchange={handleChangeSeleccionarTipoPromocion} 
+                    ></lightning-combobox>
+                </div>
+            </div>
+        </div>
+
+        <template if:true={promociones.vivc}>
+            <div class="slds-p-around_x-small">
+                <c-vivc onreglaguardada={handleGuardarReglaPromocion}></c-vivc>
+            </div>
+        </template>
+
+        <template if:true={promociones.nxn1}>
+            <div class="slds-p-around_x-small">
+                <c-nxn1></c-nxn1>
+            </div>
+        </template>
+
+        <template if:true={promociones.cdv}>
+            <div class="slds-p-around_x-small">
+                <c-cdv></c-cdv>
+            </div>
+        </template>
+
+        <template if:true={promociones.dpn}>
+            <div class="slds-p-around_x-small">
+                <c-dpn></c-dpn>
+            </div>
+        </template>
+
+        <template if:true={promociones.vrcc}>
+            <div class="slds-p-around_x-small">
+                <c-vrcc></c-vrcc>
+            </div>
+        </template>
+
+        <template if:true={promociones.vrd}>
+            <div class="slds-p-around_x-small">
+                <h1>Venta recuperable por documento</h1>
+            </div>
+        </template>
+        
+
+
+
+    </div>
+    
+</template>

@@ -1,0 +1,44 @@
+<template>
+    
+    <div class="slds-box bg-1">
+
+        <div class="text-center slds-m-top_x-small">
+            <h1>Descuento por nivel</h1>
+        </div>
+
+        <div class="slds-p-around_x-small">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_2-of-8">
+                    <lightning-input 
+                        type="number" 
+                        name="input1" 
+                        label="Cantidad de descuento"
+                        onchange={handleChangePorcentajeDescuento} 
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_2-of-8">
+                    <lightning-radio-group name="radioGroup"
+                        label="Tipo"
+                        options={opcionesDescuento}
+                        value={tipoDescuento}
+                        type="button"
+                    ></lightning-radio-group>
+                </div>
+                <div class="slds-col slds-size_4-of-8">
+                    <c-buscador></c-buscador>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-p-around_x-small">
+            <lightning-button 
+                variant="brand" 
+                label="Crear Promoción" 
+                title="Crear Promoción" 
+                onclick={handleClickCrearPromocion}
+            ></lightning-button>
+        </div>
+
+    </div>
+
+</template>

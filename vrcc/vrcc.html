@@ -1,0 +1,32 @@
+<template>
+    
+    <div class="slds-box bg-1">
+
+        <div class="text-center slds-m-top_x-small">
+            <h1>Venta recuperable con cupones</h1>
+        </div>
+
+        <div class="slds-p-around_x-small">
+            <div class="slds-grid slds-gutters slds-grid_vertical-align-end">
+                <div class="slds-col"></div>
+                <div class="slds-col">
+                   <lightning-input 
+                        type="number" 
+                        name="input1" 
+                        label="Porcentaje de descuento" 
+                   ></lightning-input>
+                </div>
+                <div class="slds-col">
+                   <lightning-button 
+                        variant="brand" 
+                        label="Crear Promoción" 
+                        title="Crear Promoción" 
+                        onclick={handleClickCrearPromocion}
+                    ></lightning-button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</template>

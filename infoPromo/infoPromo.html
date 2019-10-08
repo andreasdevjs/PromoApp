@@ -1,0 +1,104 @@
+<template>
+
+    <div class="slds-p-around_x-small">
+
+        <div class="slds-p-around_x-small">
+            <h1>Información de la promoción</h1>
+        </div>
+
+        <div class="slds-p-around_x-small">
+            <lightning-input
+                name="idpromocion"
+                label="Código de la promoción"
+                value={codPromocion}
+                onchange={handleChangeCodPromocion}
+                placeholder="Ej. 892873221"
+                field-level-help="Es el ID de la promoción. Debe ser único y de un máximo 40 caracteres"
+                required
+            ></lightning-input>
+            <lightning-button 
+                label="Generar ID Random" 
+                title="Generar ID Random" 
+                onclick={handleRandomID}
+            ></lightning-button>
+        </div>
+
+        <div class="slds-p-around_x-small">
+            <lightning-input
+                name="Nombre"
+                label="Nombre de la promoción"
+                value={nombrePromocion}
+                onchange={handleChangeNombrePromocion}
+                placeholder="Promoción Bicicletas Eléctricas"
+                field-level-help="Elija un nombre descriptivo para la promoción. Máximo 100 caracteres"
+                required
+            ></lightning-input>
+        </div>
+
+        <div class="slds-p-around_x-small">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <lightning-input 
+                        type="date"
+                        onchange={handleChangeFechaInicio}
+                        name="input1" 
+                        label="La promoción empezará el día.." 
+                    ></lightning-input>
+                </div>
+                <div class="slds-col">
+                    <lightning-input 
+                        type="date"
+                        onchange={handleChangeFechaFin} 
+                        name="input1" 
+                        label="y terminará el día.." 
+                    ></lightning-input>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-p-around_x-small">
+            <lightning-input
+                name="enter-search"
+                label="Busca la tienda aquí"
+                type="search"
+                onchange={handleChangeBusquedaTienda}
+            ></lightning-input>
+        </div>
+
+        <div class="slds-p-around_x-small">
+            <lightning-dual-listbox 
+                label="Tiendas donde se aplicará la promoción"
+                name="languages"
+                source-label="Elija las tiendas que aplicarán la promoción"
+                selected-label="Tiendas elegidas"
+                options={tiendas}
+                onchange={handleChangeTienda}
+            ></lightning-dual-listbox>
+        </div>
+
+        <div class="slds-p-around_x-small">
+            <lightning-button-stateful
+                label-when-off="Activar promoción"
+                label-when-on="¡Promoción activada!"
+                icon-name-when-off="utility:add"
+                icon-name-when-on="utility:check"
+                icon-name-when-hover="utility:close"
+                class="slds-m-top_medium"
+                selected={esSeleccionado}
+                onclick={handleActivacion}
+            ></lightning-button-stateful>
+        </div>
+
+        <div class="slds-p-around_x-small centro">
+            <lightning-button
+                variant="brand" 
+                label="Guardar Información" 
+                title="Guardar Información" 
+                onclick={handleGuardarInfoPromocion}
+                disabled={botonGuardarDisabled}
+            ></lightning-button>
+        </div>
+
+    </div>
+
+</template>

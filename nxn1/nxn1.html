@@ -1,0 +1,36 @@
+<template>
+    
+    <div class="slds-box bg-1">
+
+        <div class="text-center slds-m-top_x-small">
+            <h1>3x2, 2x1,… Nx(N-1)</h1>
+        </div>
+
+        <div class="slds-p-around_x-small">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-input 
+                            type="number" 
+                            name="input1" 
+                            label="Número de productos (N)"
+                            onchange={handleChangePorcentajeTasacion} 
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col">
+                        <c-buscador></c-buscador>
+                    </div>
+                </div>
+        </div>
+
+        <div class="slds-p-around_x-small">
+            <lightning-button 
+                variant="brand" 
+                label="Crear Promoción" 
+                title="Crear Promoción" 
+                onclick={handleClickCrearPromocion}
+            ></lightning-button>
+        </div>
+
+    </div>
+
+</template>
