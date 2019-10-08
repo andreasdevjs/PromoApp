@@ -1,2 +1,2 @@
 # PromoApp
-Promo App for Cash Converters
+Promo App for Cash Converters made with LWC (no OSS)
