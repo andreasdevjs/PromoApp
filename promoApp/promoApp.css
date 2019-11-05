@@ -1,0 +1,21 @@
+h1 {
+    font-size: 25px;
+}
+
+h3 {
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.clave {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.modal-box {
+    border: 1px solid rgb(231, 225, 225);
+    border-radius: 4px;
+    padding: 10px;
+    text-align: left;
+}

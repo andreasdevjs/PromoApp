@@ -22,20 +22,25 @@
                         options={opcionesDescuento}
                         value={tipoDescuento}
                         type="button"
+                        onchange={handleChangeSeleccionTipoDescuento}
                     ></lightning-radio-group>
                 </div>
                 <div class="slds-col slds-size_4-of-8">
                     <c-buscador></c-buscador>
                 </div>
             </div>
+            <template if:true={error}>
+                <c-error error-message={errorMessage}></c-error>
+            </template>
         </div>
 
         <div class="slds-p-around_x-small">
             <lightning-button 
                 variant="brand" 
-                label="Crear Promoción" 
-                title="Crear Promoción" 
+                label="Guardar Regla" 
+                title="Guardar Regla" 
                 onclick={handleClickCrearPromocion}
+                disabled={guardarReglaDisabled}
             ></lightning-button>
         </div>
 

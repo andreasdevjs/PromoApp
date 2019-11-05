@@ -1,0 +1,27 @@
+.show-child-div {
+    position: absolute;
+    width: 140px;
+    height: auto;
+    border: 1px solid #dddbda;
+    border-radius: 4px;
+    background: white;
+    top: 80px;
+    left: 25px;
+}
+
+.show-child-div:hover {
+    cursor: pointer;
+    outline: 0;
+    border: 1px solid #1589ee;
+    box-shadow: 0 0 0 1px #1589ee inset;
+}
+
+/* Para que los cuadrados no queden des-alineados como vienen por defecto */
+.custom {
+    margin-left: 0px;
+    margin-right: 10px;
+}
+
+.custom-dimensions {
+    height: 6rem;
+}

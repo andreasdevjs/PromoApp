@@ -1,0 +1,287 @@
+<template>
+    <lightning-card title="Formulario de creación de una promoción" icon-name="custom:custom9">
+
+        <div class="slds-m-around_medium">
+            <h1 class="slds-text-heading_small">General</h1>
+        </div>
+
+        <!-- BLOQUE INFORMACIÓN DE LA PROMOCIÓN -->
+        <div class="slds-m-around_large">
+
+            <lightning-input
+                name="idpromocion"
+                label="Código de la promoción"
+                value={codPromocion}
+                onchange={handleChangeCodPromocion}
+                placeholder="Ej. 892873221"
+                field-level-help="Es el ID de la promoción. Debe ser único y de un máximo 40 caracteres"
+                required
+            ></lightning-input>
+            <lightning-button label="Generar ID Random" title="Generar ID Random" onclick={handleRandomID}></lightning-button>
+
+            <div class="slds-m-top_medium"></div>
+
+            <lightning-input
+                name="Nombre"
+                label="Nombre de la promoción"
+                value={nombrePromocion}
+                onchange={handleChangeNombrePromocion}
+                placeholder="Promoción Bicicletas Eléctricas"
+                field-level-help="Elija un nombre descriptivo para la promoción. Máximo 100 caracteres"
+                required
+            ></lightning-input>
+
+            <div class="slds-m-top_medium"></div>
+
+            <lightning-combobox
+                name="exclusividad"
+                label="Selecciona la exclusividad de la promoción"
+                value={exclusividad}
+                placeholder="Exclusividad"
+                options={opcionesExclusividad}
+                onchange={handleExclusividad}
+                required
+            ></lightning-combobox>
+
+            <div class="slds-m-top_medium"></div>
+            <lightning-input 
+                type="date"
+                onchange={handleChangeFechaInicio}
+                name="input1" 
+                label="La promoción empezará el día.." 
+            ></lightning-input>
+            <lightning-input 
+                type="date"
+                onchange={handleChangeFechaFin} 
+                name="input1" 
+                label="y terminará el día.." 
+            ></lightning-input>
+
+            <div class="slds-m-top_medium"></div>
+            <lightning-dual-listbox 
+                label="Tiendas donde se aplicará la promoción"
+                name="languages"
+                source-label="Elija las tiendas que aplicarán la promoción"
+                selected-label="Tiendas elegidas"
+                options={tiendas}
+                onchange={handleChangeTienda}
+            ></lightning-dual-listbox>
+
+            <div class="slds-m-top_medium">
+                <lightning-button-stateful
+                    label-when-off="Activar promoción"
+                    label-when-on="¡Promoción activada!"
+                    icon-name-when-off="utility:add"
+                    icon-name-when-on="utility:check"
+                    icon-name-when-hover="utility:close"
+                    class="slds-m-top_medium"
+                    selected={esSeleccionado}
+                    onclick={handleActivacion}
+                ></lightning-button-stateful>
+            </div>
+        </div>
+
+        <!-- BLOQUE REGLAS DE PROMOCIÓN -->
+        <div class="slds-m-around_medium">
+            <h1 class="slds-text-heading_small">Reglas de la promoción</h1>
+        </div>
+
+        <div class="slds-box slds-m-around_medium slds-theme_shade">
+            <lightning-helptext content="Este ejemplo se irá actualizando conforme se vayan introduciendo cambios en la promoción, es decir, tendrás un ejemplo de cada tipo de promoción para inspirarte."></lightning-helptext>
+            <h3 class="alin-center"><strong>Ejemplo de promoción:</strong> {ejemplo}</h3>
+        </div>
+
+        <!-- Creamos un grid para ponerlo como en commerce cloud -->
+        <div class="slds-grid slds-gutters slds-m-around_medium">
+            <div class="slds-col">
+                <h2 class="slds-align_absolute-center" style="height:5rem"><strong>Tipo de promoción</strong></h2>
+            </div>
+            <div class="slds-col">
+            <lightning-combobox
+                    name="tipopromocion"
+                    label="Tipo de Promoción"
+                    value={tipoPromocion}
+                    placeholder="Producto, Pedido o Envío"
+                    options={opcionesPromocion}
+                    onchange={handleChangeTipoPromocion}
+                ></lightning-combobox>
+            </div>
+            <div class="slds-col">
+                <lightning-combobox
+                    name="condicionpromocion"
+                    label="Regla de la promoción"
+                    value={criterio}
+                    options={opcionesCondiciones}
+                    onchange={handleChangeCondicionPromocion}
+                ></lightning-combobox>
+            </div>
+        </div>
+        <!-- // -->
+
+        <!-- Bloque descuento:  Importe de compra de producto -->
+            <template if:true={esVisibleDescuento2}>
+                <div class="slds-grid slds-gutters slds-m-around_medium">
+                    <div class="slds-col">
+                        <h2 class="slds-align_absolute-center" style="height:5rem"><strong>Descuento: </strong></h2>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-input type="number"
+                            disabled={esDisabledInputNumber}
+                            label="Compre"
+                            value="">
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-input type="number"
+                            disabled={esDisabledInputNumber}
+                            label="Reciba"
+                            value="">
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-combobox
+                            name="condicionpromocion"
+                            label="Tipo de descuento"
+                            value={criterioDescuentoSimple}
+                            options={opcionesDescuentoSimple2}
+                            onchange={handleChangeDescuentoSimple}
+                        ></lightning-combobox>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-gutters slds-m-around_medium">
+                    <div class="slds-col slds-size_1-of-3">
+                        <h2 class="slds-align_absolute-center" style="height:5rem"><strong>Elige los productos o categorías</strong></h2>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-input
+                            name="enter-search"
+                            label="Busque el producto o categoría para el descuento"
+                            type="search"
+                        ></lightning-input>
+                    </div>
+                    <!-- TODO: AÑADIR AQUÍ EN PÍLDORAS LAS COSAS ELEGIDAS -->
+                </div>
+            </template>
+        <!-- // -->            
+
+        <!-- Bloque de descuento: Sin criterio -->
+        <template if:true={esVisibleDescuentoSimple}> 
+            <div class="slds-grid slds-gutters slds-m-around_medium">
+                <div class="slds-col">
+                    <h2 class="slds-align_absolute-center" style="height:5rem"><strong>Descuento</strong></h2>
+                </div>
+                <div class="slds-col">
+                    <lightning-input type="number"
+                        id="num"
+                        disabled={esDisabledInputNumber}
+                        label="Inserte un número"
+                        value="">
+                    </lightning-input>
+                </div>
+                <div class="slds-col">
+                    <lightning-combobox
+                        name="condicionpromocion"
+                        label="Tipo de descuento"
+                        value={criterioDescuentoSimple}
+                        options={opcionesDescuentoSimple}
+                        onchange={handleChangeDescuentoSimple}
+                    ></lightning-combobox>
+                </div>
+            </div>
+        </template>
+        <!-- // -->
+
+        <!-- Bloque categorías de producto -->
+        <template if:true={esVisibleDescuentoSimple}> 
+            <div class="slds-grid slds-gutters slds-m-around_medium">
+                <div class="slds-col slds-size_1-of-3">
+                    <h2 class="slds-align_absolute-center" style="height:5rem"><strong>Productos con descuento:</strong></h2>
+                </div>
+                <div class="slds-col slds-size_2-of-3">
+                    <lightning-tree
+                        header="Árbol de categorías"
+                        items={categorias} 
+                        onselect={handleOnselectCategoria}
+                    ></lightning-tree>
+                </div>
+            </div>
+            <!--
+            <div class="slds-m-vertical_medium">
+                <p>The selected item's label is: <span class="slds-text-heading_small">{selectedItemValue}</span></p>
+            </div>
+            -->
+            <div class="slds-grid slds-gutters slds-m-around_medium">
+                <div class="slds-col slds-size_1-of-3">
+                    <h2 class="slds-align_absolute-center" style="height:5rem"><strong>O búscalos aquí</strong></h2>
+                </div>
+                <div class="slds-col slds-size_2-of-3">
+                    <lightning-input
+                        type="search"
+                        placeholder="Ej. Apple iPhone"
+                        onchange={handleChangeBuscarCategoria}
+                        class="slds-m-bottom_small"
+                        label="Escriba y encuentra la categoría o subcategorías"
+                    ></lightning-input>
+                </div>
+            </div>
+        </template>
+        <!-- // -->
+
+
+
+
+
+
+        <!-- MODAL DE CONFIRMACIÓN -->
+            <div class="slds-theme_default">
+                <template if:true={esAbiertoModal}>
+                    <div style="height: 500px;">
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                            <div class="slds-modal__container">
+                                <header class="slds-modal__header">
+                                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleCerrarModal}>
+                                        <lightning-icon icon-name="utility:close" variant="inverse" alternative-text="Close" size="medium">
+                                        </lightning-icon>
+                                        <span class="slds-assistive-text">Close</span>
+                                    </button>
+                                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Confirme la promoción</h2>
+                                </header>
+                                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                    <div class="slds-text-heading_small slds-text-align_center">
+                                        Está a punto de crear la siguiente promoción: <br> <br>
+                                        <div class="modal-box">
+                                            <span class="clave">ID: </span><span class="valor">{codPromocion}</span> <br>
+                                            <span class="clave">Nombre: </span><span class="valor">{nombrePromocion}</span> <br>
+                                            <span class="clave">Exclusividad: </span><span class="valor">{exclusividad}</span> <br>
+                                            <span class="clave">Fecha Inicio: </span><span class="valor">{fechaInicio}</span> <br>
+                                            <span class="clave">Fecha Fin: </span><span class="valor">{fechaFin}</span> <br>
+                                            <span class="clave">Tiendas Selecionadas: </span><span class="valor">{tiendasSeleccionadas}</span> <br>
+                                            <span class="clave">Activada: </span><span class="valor">{getEsSeleccionado}</span> <br>
+                                            <span class="clave">Descuento en: </span><span class="valor">{selectedItemValue}</span> <br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <footer class="slds-modal__footer">
+                                    <lightning-button variant="success" label="Crear promoción" title="Crear promoción" onclick={handleCrearPromocion}></lightning-button>
+                                    <lightning-button class="slds-m-left_x-small" label="Cancelar" variant="neutral" onclick={handleCerrarModal}></lightning-button>
+                                </footer>
+                            </div>
+                        </section>
+                        <div class="slds-backdrop slds-backdrop_open"></div>
+                    </div>
+                </template>
+            </div>
+        <!-- // Modal -->
+
+        <!-- Botón final de crear la promoción -->
+        <div class="">
+            <hr>
+            <div class="slds-align_absolute-center" style="height:5rem">
+                <lightning-button variant="brand" label="Crear Promoción" title="Crear Promoción" onclick={handleAbrirModal} class="enorme"></lightning-button>
+            </div>
+            <hr>
+        </div>
+
+    </lightning-card>
+</template>

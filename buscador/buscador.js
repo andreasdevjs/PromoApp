@@ -1,12 +1,18 @@
-import { LightningElement, track } from 'lwc';
+/* eslint-disable no-console */
+import { LightningElement, track, api } from 'lwc';
 import arbolCategorias from './arbolCategorias.js'
 
 export default class Buscador extends LightningElement {
     
-    @track textoIntroducido ='';
+    @track textoIntroducido = '';
     @track categoriasEncontradas = [];
     @track categoriasSeleccionadas = [];
+    @track error = false;
+    todasCategorias = [];
+    @track mostrarHasSeleccionado = false;
 
+
+    // Crea un ID único
     handleRandomID() {
         return Date.now() + Math.random().toString(36).substr(2, 9) + Math.random().toString(36).substr(2, 9);
     }
@@ -34,10 +40,13 @@ export default class Buscador extends LightningElement {
     }
 
 
-    // Gestiona el clic en la categoría que se quiera añadir..
+    // Gestiona el clic en la categoría que se quiera añadir.. y setea los valores de nuevo
     handleClicCategoria(event) {
         const categoriaSeleccionada = event.target.getAttribute("data-value");
-        this.categoriasSeleccionadas.push({'nombre': categoriaSeleccionada, 'id': this.handleRandomID()});
+        const nivel = event.target.getAttribute("data-nivel");
+        this.categoriasSeleccionadas.push({'nombre': categoriaSeleccionada, 'id': this.handleRandomID(), 'cod_nivel': Number(nivel) });
+        this.mostrarHasSeleccionado = true;
+        console.log(JSON.stringify(this.categoriasSeleccionadas));
         this.categoriasEncontradas = [];
         this.textoIntroducido = '';
     }
@@ -53,6 +62,38 @@ export default class Buscador extends LightningElement {
         this.categoriasSeleccionadas = categoriasRestantes;
     }
 
+
+    /*
+    // Gestiona la llamada al árbol y se trae las categorías. Las mete en la propiedad todasCategorías que se inicializa vacío
+    cargarCategorias() {
+        fetch('https://hermes.cashconverters.es/tree/full', {
+            'method': 'GET',
+            'mode': 'no-cors',
+            'headers': {
+                'Content-Type': 'application/json',
+                'Authorization': 'f29668b65a8a74ab5e64f0778a0c456feb078639',
+                'Accept-Language': 'es-ES',
+                'User-Agent': 'HermesClient/puc'
+            }
+        }).then((response)=> {
+            console.log(response);
+        })
+    }
+
+
+    // Método del ciclo de vida que se ejecuta cuando se haya conectado el componente
+    connectedCallback() {
+        this.cargarCategorias()
+    
+    }
+    */
+
+
+    // Getter público para obtener las categorías seleccionadas
+    @api
+    get obtenerCategorias() {
+        return this.categoriasSeleccionadas;
+    }
 
 
 }

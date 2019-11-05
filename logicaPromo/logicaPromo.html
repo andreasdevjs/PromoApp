@@ -38,19 +38,19 @@
 
         <template if:true={promociones.nxn1}>
             <div class="slds-p-around_x-small">
-                <c-nxn1></c-nxn1>
+                <c-nxn1 onreglaguardada={handleGuardarReglaPromocion}></c-nxn1>
             </div>
         </template>
 
         <template if:true={promociones.cdv}>
             <div class="slds-p-around_x-small">
-                <c-cdv></c-cdv>
+                <c-cdv onreglaguardada={handleGuardarReglaPromocion}></c-cdv>
             </div>
         </template>
 
         <template if:true={promociones.dpn}>
             <div class="slds-p-around_x-small">
-                <c-dpn></c-dpn>
+                <c-dpn onreglaguardada={handleGuardarReglaPromocion}></c-dpn>
             </div>
         </template>
 

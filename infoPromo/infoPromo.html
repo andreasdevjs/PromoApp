@@ -40,6 +40,7 @@
                 <div class="slds-col">
                     <lightning-input 
                         type="date"
+                        value={fechaInicio}
                         onchange={handleChangeFechaInicio}
                         name="input1" 
                         label="La promoción empezará el día.." 
@@ -88,6 +89,10 @@
                 onclick={handleActivacion}
             ></lightning-button-stateful>
         </div>
+
+        <template if:true={error}>
+            <c-error error-message={errorMessage}></c-error>
+        </template>
 
         <div class="slds-p-around_x-small centro">
             <lightning-button

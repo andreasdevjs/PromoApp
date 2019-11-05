@@ -1,0 +1,52 @@
+<template>
+    
+    <!-- Migas de pan -->
+    <lightning-breadcrumbs class="slds-m-around_x-small">
+        <template for:each={breadcrumbs} for:item="crumb">
+            <lightning-breadcrumb 
+                key={crumb.id} 
+                label={crumb.label} 
+                name={crumb.name} 
+                data-nivel={crumb.nivel}
+                data-numero={crumb.num}
+                onclick={handleNavigateTo}
+            ></lightning-breadcrumb>
+        </template>
+    </lightning-breadcrumbs>
+    <!-- Migas de pan -->
+
+    <!-- Cuerpo del componente con las categorías -->
+    <fieldset class="slds-form-element">
+        <div class="slds-form-element__control">
+            <template for:each={nivelesPrincipales} for:item="nivel">
+
+                <!-- Cada una de las categorías -->
+                <div key={nivel.cod_nivel} class="slds-visual-picker slds-visual-picker_medium custom">
+                    <input type="checkbox" class="ch" id={nivel.cod_nivel} value="visual-picker-80" name="options" data-nivel={nivel.cod_nivel} onclick={handleSelectParent} />
+                    <label for={nivel.cod_nivel}>
+                        <span class="slds-visual-picker__figure slds-visual-picker__icon slds-align_absolute-center custom-dimensions">
+                            <span class="slds-is-selected">
+                                <span class="slds-icon_container">
+                                    <svg class="slds-icon slds-icon_large slds-icon-action-check" aria-hidden="true">
+                                        <use xlink:href="/assets/icons/action-sprite/svg/symbols.svg#check"></use>
+                                    </svg>
+                                </span>
+                            </span>
+                            <span class="slds-is-not-selected">
+                                <p>{nivel.descripcion}</p>
+                            </span>
+                        </span>
+                        <span class="slds-visual-picker__body">
+                            <span class="slds-text-title">{nivel.descripcion}</span>
+                        </span>
+                    </label>
+                    <div class="show-child-div" data-nivel={nivel.cod_nivel} onclick={handleSelectChildren}>Seleccionar niveles</div>
+                </div>
+                <!-- Cada una de las categorías -->
+
+            </template>
+        </div>
+    </fieldset>
+    <!-- Cuerpo del componente con las categorías -->
+
+</template>

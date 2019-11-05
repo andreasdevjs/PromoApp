@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { LightningElement, track } from 'lwc';
 import getTextoEjemplo from './utils.js'
 
@@ -56,7 +57,7 @@ export default class LogicaPromo extends LightningElement {
     // Gestiona el evento personalizado y envia a su vez la información al padre
     handleGuardarReglaPromocion(event) {
         const reglaPromocion = event.detail;
-        console.log(JSON.stringify(reglaPromocion));
+        console.log('Reglas Promoción: ', JSON.stringify(reglaPromocion));
 
         // Creamos el evento personalizado y pasamos la información al padre (<c-logica-promo>)
         const reglaCreada = new CustomEvent('reglacreada', { detail: {...reglaPromocion} });

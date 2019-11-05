@@ -24,8 +24,10 @@ export default class Vivc extends LightningElement {
 
         const reglasPromocion = {
             tipo: 'vivc',
-            porcentajeTasacion: this.porcentajeTasacion,
-            importeCesta: this.importeCesta
+            reglas: {
+                porcentajeTasacion: this.porcentajeTasacion,
+                importeCesta: this.importeCesta
+            }
         }
 
         // Creamos el evento personalizado y pasamos la información al padre (<c-logica-promo>)

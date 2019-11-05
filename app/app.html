@@ -1,6 +1,23 @@
 <template>
     <lightning-card title="Promociones" icon-name="custom:custom9">
-        <lightning-button label="Resetear" slot="actions" onclick={handleClicResetear}></lightning-button>
+        <lightning-button-group slot="actions">
+            <lightning-button label="Resetear" icon-name="utility:delete" onclick={handleResetear}></lightning-button>
+            <lightning-button-menu alternative-text="Show menu" onselect={handleSelectMenu}>
+                <lightning-menu-item label="Documentación" value="Documentación"></lightning-menu-item>
+                <lightning-menu-item label="Vídeo Ayuda" value="Vídeo Ayuda"></lightning-menu-item>
+            </lightning-button-menu>
+        </lightning-button-group>
+
+        <!-- Modal reseteo -->
+        <template if:true={mostrarModalReset}>
+            <c-modal header="¿Estás seguro de esto?">
+                <h2>Vas a hacer un reset del formulario de promociones y se perderán todos los cambios hechos hasta ahora</h2>
+                <div slot="footer">
+                    <button class="slds-button slds-button_neutral">Si, resetar</button>
+                    <button class="slds-button slds-button_brand" onclick={handleCancelarReset}>Cancelar</button>
+                </div>
+            </c-modal>
+        </template>
 
         <!-- Componente con la información de la promoción -->
         <c-info-promo oninfoguardada={handleInfoGuardada}></c-info-promo>

@@ -1,0 +1,65 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "baseUrl": ".",
+        "paths": {
+            "c/app": [
+                "app/app.js"
+            ],
+            "c/arbol": [
+                "arbol/arbol.js"
+            ],
+            "c/buscador": [
+                "buscador/buscador.js"
+            ],
+            "c/buscadorCategorias": [
+                "buscadorCategorias/buscadorCategorias.js"
+            ],
+            "c/cdv": [
+                "cdv/cdv.js"
+            ],
+            "c/dpn": [
+                "dpn/dpn.js"
+            ],
+            "c/error": [
+                "error/error.js"
+            ],
+            "c/infoPromo": [
+                "infoPromo/infoPromo.js"
+            ],
+            "c/logicaPromo": [
+                "logicaPromo/logicaPromo.js"
+            ],
+            "c/modal": [
+                "modal/modal.js"
+            ],
+            "c/nxn1": [
+                "nxn1/nxn1.js"
+            ],
+            "c/promoApp": [
+                "promoApp/promoApp.js"
+            ],
+            "c/qlikComponent": [
+                "qlikComponent/qlikComponent.js"
+            ],
+            "c/selectorVisual": [
+                "selectorVisual/selectorVisual.js"
+            ],
+            "c/vivc": [
+                "vivc/vivc.js"
+            ],
+            "c/vrcc": [
+                "vrcc/vrcc.js"
+            ]
+        }
+    },
+    "include": [
+        "**/*",
+        "../../../../.sfdx/typings/lwc/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}

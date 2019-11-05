@@ -6,21 +6,26 @@
         onchange={handleChangeBuscarCategoria}
         value={textoIntroducido}
         class="slds-m-bottom_small"
-        label="Escriba y encuentre la categoría o subcategorías"
+        label="Escriba y encuentre los niveles a promocionar"
     ></lightning-input>
 
-    <template for:each={categoriasEncontradas} for:item="categoria">
-        <li 
-            class="resultado" 
-            data-value={categoria.name} 
-            onclick={handleClicCategoria} 
-            key={categoria.idLevel}
-        >
-            {categoria.name}
-        </li>
-    </template>
+    <div class="resultados-div-scroll">
+        <template for:each={categoriasEncontradas} for:item="categoria">
+            <li 
+                class="resultado" 
+                data-value={categoria.name}
+                data-nivel={categoria.idLevel} 
+                onclick={handleClicCategoria} 
+                key={categoria.idLevel}
+            >
+                {categoria.name}
+            </li>
+        </template>
+    </div>
 
-    <h3 class="cat-seleccionadas">Has seleccionado: </h3>
+    <template if:true={mostrarHasSeleccionado}>
+        <h3 class="cat-seleccionadas">Has seleccionado: </h3>
+    </template>
 
     <template for:each={categoriasSeleccionadas} for:item="categoria">
         <lightning-pill
@@ -29,6 +34,10 @@
             data-value={categoria.nombre}
             onremove={handleRemoveCategoriaSeleccionada}
         ></lightning-pill>
+    </template>
+
+    <template if:true={error}>
+        <h6 class="error">Ha ocurrido un error al cargar las categorías</h6>
     </template>
 
 </template>
