@@ -8,25 +8,72 @@
             </lightning-button-menu>
         </lightning-button-group>
 
-        <!-- Modal reseteo -->
-        <template if:true={mostrarModalReset}>
-            <c-modal header="¿Estás seguro de esto?">
-                <h2>Vas a hacer un reset del formulario de promociones y se perderán todos los cambios hechos hasta ahora</h2>
-                <div slot="footer">
-                    <button class="slds-button slds-button_neutral">Si, resetar</button>
-                    <button class="slds-button slds-button_brand" onclick={handleCancelarReset}>Cancelar</button>
-                </div>
-            </c-modal>
-        </template>
+        <!-- Modal de documentación -->
+        <c-modal class="modal-documentacion" header="Información sobre las promociones disponibles">
+            <lightning-accordion class="example-accordion" onsectiontoggle={handleToggleSection} active-section-name="dpn">
 
+                <lightning-accordion-section name="dpn" label="Descuento por niveles">
+                    <h6><b>Información de ayuda</b></h6>
+                    <p>Para esta promoción tendrá que elegir un porcentaje o cantidad fija de 
+                        descuento que desee aplicar y unos niveles a los que aplicar dicho descuento.
+                    </p>
+                    <br>
+                    <h6><b>Reglas de formato</b></h6>
+                    <ol>
+                        <li>1. La cantidad debe ser mayor a 0</li>
+                        <li>2. Debe elegir el tipo de descuento. Porcentaje o cantidad fija</li>
+                        <li>3. Debe elegir al menos 1 nivel que promocionar. Puede elegirse una categoría padre</li>
+                    </ol>
+                </lightning-accordion-section>
+            
+                <lightning-accordion-section name="vivc" label="Vale de importe variable en compras">
+                    <h6><b>Información de ayuda</b></h6>
+                    <p>Para esta promoción tendrá que elegir un porcentaje de sobretasación que desee aplicar y un importe mínimo de cesta
+                        para que se tenga en cuenta.
+                    </p>
+                    <br>
+                    <h6><b>Reglas de formato</b></h6>
+                    <ol>
+                        <li>1. El porcentaje debe ser mayor a 0</li>
+                        <li>2. El importe de la cesta ha de ser mayor a 0</li>
+                    </ol>
+                </lightning-accordion-section>
+                
+            </lightning-accordion>
+            <div slot="footer">
+                <button class="slds-button slds-button_brand" onclick={handleCancelarReset}>Cerrar</button>
+            </div>
+        </c-modal>
+
+        <!-- Modal reseteo -->
+        <c-modal class="modal-reset" header="¿Estás seguro de esto?">
+            <div class="centro">
+                <lightning-icon icon-name="utility:warning" alternative-text="Warning!" size="large" variant="warning"></lightning-icon>
+                <div class="slds-text-heading_small slds-m-top_x-small">Vas a hacer un reset del formulario de promociones y se perderán todos los cambios hechos hasta ahora</div>
+            </div>
+            <div slot="footer">
+                <button class="slds-button slds-button_neutral" onclick={handleClicConfirmarReset}>Si, resetar</button>
+                <button class="slds-button slds-button_brand" onclick={handleCancelarReset}>Cancelar</button>
+            </div>
+        </c-modal>
+        
+
+        <!-- Modal vídeo ayuda -->
+        <c-modal class="modal-video-ayuda">
+            <video width="100%" controls>
+                <source src={videoAyudaPromo} type="video/webm">
+            </video>
+        </c-modal>
+        
         <!-- Componente con la información de la promoción -->
-        <c-info-promo oninfoguardada={handleInfoGuardada}></c-info-promo>
+        <c-info-promo oninfoguardada={handleInfoGuardada} reset={reset}></c-info-promo>
 
         <template if:true={mostrarReglasPromocion}>
             <!-- Componente con la lógica de la promoción -->
             <c-logica-promo onreglacreada={handleReglaCreada}></c-logica-promo>
         </template>
         
+        <!-- Si todo va bien muestra el botón de crear la promoción o los errores -->
         <template if:true={mostrarBotonCrearPromocion}>
             <div class="slds-align_absolute-center" style="height:5rem">
                 <button class="crear-promo" onclick={handleCrearPromocion}>¡Crear Promoción!</button> <br>

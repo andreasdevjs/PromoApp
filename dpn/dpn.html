@@ -1,48 +1,75 @@
 <template>
-    
+
     <div class="slds-box bg-1">
 
-        <div class="text-center slds-m-top_x-small">
-            <h1>Descuento por nivel</h1>
-        </div>
+        <lightning-card title="Descuento por nivel">
 
-        <div class="slds-p-around_x-small">
-            <div class="slds-grid slds-gutters">
-                <div class="slds-col slds-size_2-of-8">
-                    <lightning-input 
-                        type="number" 
-                        name="input1" 
-                        label="Cantidad de descuento"
-                        onchange={handleChangePorcentajeDescuento} 
-                    ></lightning-input>
+            <lightning-button-group slot="actions">
+                <lightning-button label="Modo Buscador" data-value="buscador" onclick={handleClicModo}></lightning-button>
+                <lightning-button label="Modo Selector" data-value="selector" onclick={handleClicModo}></lightning-button>
+            </lightning-button-group>
+
+            <div class="medidas-dpn">
+
+                <div class="slds-p-around_x-small">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_3-of-12">
+                            <lightning-input 
+                                type="number" 
+                                name="input1" 
+                                label="Cantidad de descuento"
+                                onchange={handleChangePorcentajeDescuento}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12">
+                            <lightning-radio-group 
+                                name="radioGroup" 
+                                label="Tipo" options={opcionesDescuento}
+                                value={tipoDescuento} 
+                                type="button" 
+                                onchange={handleChangeSeleccionTipoDescuento}
+                            ></lightning-radio-group>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <template if:true={mostrarBuscador}>
+                                <c-buscador></c-buscador>
+                            </template>
+                            <template if:true={mostrarBotonSelector}>
+                                <label class="slds-form-element__label">Abra el selector pulsando el botón</label>
+                                <button class="slds-button slds-button_brand slds-button_stretch" onclick={handleAbrirSelector}>Abrir Selector</button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <template for:each={errores} for:item="error">
+                        <c-error key={error.id} error-message={error.mensaje}></c-error>
+                    </template>
+
+                    <!-- Modal selector visual -->
+                    <template if:true={mostrarSelectorEnModal}>
+                        <c-modal header="Elija los niveles de la promoción">
+                            <c-selector-visual></c-selector-visual>
+                            <div slot="footer">
+                                <button class="slds-button slds-button_brand" onclick={handleTerminar}>Terminar</button>
+                                <button class="slds-button slds-button_neutral" onclick={handleIrAtras}>Ir atrás</button>
+                            </div>
+                        </c-modal>
+                    </template>
                 </div>
-                <div class="slds-col slds-size_2-of-8">
-                    <lightning-radio-group name="radioGroup"
-                        label="Tipo"
-                        options={opcionesDescuento}
-                        value={tipoDescuento}
-                        type="button"
-                        onchange={handleChangeSeleccionTipoDescuento}
-                    ></lightning-radio-group>
-                </div>
-                <div class="slds-col slds-size_4-of-8">
-                    <c-buscador></c-buscador>
-                </div>
+
             </div>
-            <template if:true={error}>
-                <c-error error-message={errorMessage}></c-error>
-            </template>
-        </div>
 
-        <div class="slds-p-around_x-small">
-            <lightning-button 
-                variant="brand" 
-                label="Guardar Regla" 
-                title="Guardar Regla" 
-                onclick={handleClickCrearPromocion}
-                disabled={guardarReglaDisabled}
-            ></lightning-button>
-        </div>
+            <div slot="footer">
+                <lightning-button 
+                    variant="brand" 
+                    label="Guardar Regla" 
+                    title="Guardar Regla"
+                    onclick={handleClickCrearPromocion} 
+                    disabled={guardarReglaDisabled}
+                ></lightning-button>
+            </div>
+
+        </lightning-card>
 
     </div>
 

@@ -5,3 +5,8 @@
 p {
     color: black;
 }
+
+.modal-medidas {
+    max-width: 60rem;
+    min-width: 20rem;
+}

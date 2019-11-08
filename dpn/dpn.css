@@ -9,3 +9,12 @@ h1 {
 .bg-1 {
     background: rgb(250, 245, 245);
 }
+
+.medidas-dpn {
+    width: 700px;
+    min-height: 250px;
+}
+
+p {
+    margin-top: 5px;
+}

@@ -44,7 +44,6 @@ export default class LogicaPromo extends LightningElement {
     // Opciones de promoción
     get opcionesPromocion() {
         return [
-            { label: 'Vale de importe variable en compras', value: 'vivc' },
             { label: '3x2, 2x1,… Nx(N-1)', value: 'nxn1' },
             { label: 'Cupón de descuento en venta', value: 'cdv' },
             { label: 'Descuento por nivel', value: 'dpn' },

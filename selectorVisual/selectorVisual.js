@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-confusing-arrow */
 import { LightningElement, track, api } from 'lwc';
-import niveles from './niveles';
+import niveles from '@salesforce/resourceUrl/niveles';
+import { loadScript } from 'lightning/platformResourceLoader';
 
 export default class SelectorVisual extends LightningElement {
 
@@ -11,12 +12,16 @@ export default class SelectorVisual extends LightningElement {
     _categoriasParaEnviar = []; // niveles para enviar a la promoción
 
     @track
-    breadcrumbs = [];
+    breadcrumbs = []; // array de migas de pan
+
+    _niveles = []; // array con todos los niveles importados
+
 
     // Genera IDs únicos para las key de los for:each obligatorios
     randomID() {
         return Date.now() + Math.random().toString(36).substr(2, 9) + Math.random().toString(36);
     }
+
 
     // Función que se encarga de renderizar como seleccionadas las categorías elegidas anteriormente para no perder visualmente lo elegido
     // Cada vez que se llama esta función, marca como checked las categorías que estén en _categoriasparaenviar
@@ -31,6 +36,7 @@ export default class SelectorVisual extends LightningElement {
         }
     }
 
+
     // Gestiona la navegación de las migas de pan. Coge el nivel y te muestra el paso "anterior".
     // además si clicas en una miga de pan padre de un hijo, la navegación se ajusta con el length
     handleNavigateTo(event) {
@@ -38,12 +44,12 @@ export default class SelectorVisual extends LightningElement {
         const numeroBreadcrumb = event.target.getAttribute('data-numero');
         console.log('MIGA DE PAN CLICADA: ', nivelClicado)
         if(nivelClicado === '0') {
-            this.nivelesPrincipales = niveles.filter((categoria) => {
+            this.nivelesPrincipales = this._niveles.filter((categoria) => {
                 return categoria.cod_nivel_padre === '0' && categoria.descripcion !== 'GOD' && categoria.descripcion !== 'STOREV3';
             }).sort((a,b) => (a.descripcion > b.descripcion) ? 1 : ((b.descripcion > a.descripcion) ? -1 : 0));
             this.breadcrumbs.length = 1;
         } else {
-            this.nivelesPrincipales = niveles.filter((categoria) => {
+            this.nivelesPrincipales = this._niveles.filter((categoria) => {
                 return categoria.cod_nivel_padre === nivelClicado
             });
             this.breadcrumbs.length = numeroBreadcrumb;
@@ -79,7 +85,7 @@ export default class SelectorVisual extends LightningElement {
         }
 
         // renderiza los hijos cuando se haya clicado 'seleccionar niveles' | Filta del json los que tengan su categoría padre igual a la seleccionada
-        this.nivelesPrincipales = niveles.filter((categoria) => {
+        this.nivelesPrincipales = this._niveles.filter((categoria) => {
             return categoria.cod_nivel_padre === nivelSeleccionado
         });
 
@@ -87,7 +93,7 @@ export default class SelectorVisual extends LightningElement {
          if(this.breadcrumbs.length === 1 ) {
             // Obtengo el objeto nivel completo (del que se ha hecho clic) para enviarlo a las migas de pan
             // TODO: ACTUALMENTE SOLO COGE EL NIVEL UNO POR LO DE === '0', tendríamos que ver cómo hacer para añadir más
-            const nivelObj = niveles.filter((nivel) => nivel.cod_nivel === nivelSeleccionado && nivel.cod_nivel_padre === '0');
+            const nivelObj = this._niveles.filter((nivel) => nivel.cod_nivel === nivelSeleccionado && nivel.cod_nivel_padre === '0');
             const nuevoBreadcumb = {
                 nivel: nivelObj[0].cod_nivel,
                 id: this.randomID(),
@@ -98,7 +104,7 @@ export default class SelectorVisual extends LightningElement {
             this.breadcrumbs.push(nuevoBreadcumb);
         } else {
             const nivelObjAnterior = this.breadcrumbs[this.breadcrumbs.length - 1];
-            const nivelObj = niveles.filter((nivel) => nivel.cod_nivel === nivelSeleccionado && nivel.cod_nivel_padre === nivelObjAnterior.nivel);
+            const nivelObj = this._niveles.filter((nivel) => nivel.cod_nivel === nivelSeleccionado && nivel.cod_nivel_padre === nivelObjAnterior.nivel);
             const nuevoBreadcumb = {
                 nivel: nivelObj[0].cod_nivel,
                 id: this.randomID(),
@@ -111,20 +117,30 @@ export default class SelectorVisual extends LightningElement {
 
     }
 
-    // En cuanto el componente esté conectado, mostrar las categorías padres ordenadas e insertar el nivel padre en las migas de pan
-    connectedCallback() {
-        this.nivelesPrincipales = niveles.filter((categoria) => {
+
+    // FUNCIÓN ASÍNCRONA
+    // En cuanto el componente esté conectado, nos traemos el árbol completo del recurso estático,
+    // mostramos las categorías padres ordenadas e insertamos el nivel padre en las migas de pan.
+    async connectedCallback() {
+
+        await loadScript(this, niveles)
+        .then(() => { this._niveles = window.niveles })
+        .catch(error => console.log('ERROR', error))
+
+        this.nivelesPrincipales = this._niveles.filter((categoria) => {
             return categoria.cod_nivel_padre === '0' && categoria.descripcion !== 'GOD' && categoria.descripcion !== 'STOREV3';
         }).sort((a,b) => (a.descripcion > b.descripcion) ? 1 : ((b.descripcion > a.descripcion) ? -1 : 0));
 
         this.breadcrumbs.push({id: '0', label: 'Todas las categorías', name: 'Todas las categorías', nivel: 0, num: this.breadcrumbs.length + 1});
     }
 
+
     // Con cada render se ejecuta la función
     renderedCallback() {
         console.log('NUEVO RENDERIZADO');
         this.renderizarNivelesSeleccionados();
     }
+
 
     // Método público para acceder a las categorías
     @api

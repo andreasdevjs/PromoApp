@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import todasLasTiendas from './tiendas.js';
 
 export default class InfoPromo extends LightningElement {
@@ -6,7 +6,7 @@ export default class InfoPromo extends LightningElement {
     @track codPromocion = '';
     @track nombrePromocion = '';
     @track fechaInicio = '';
-    @track fechaFin;
+    @track fechaFin = '';
     @track esSeleccionado = false;
     @track tiendasSeleccionadas = [];
     @track tiendaBuscada = '';
@@ -14,6 +14,8 @@ export default class InfoPromo extends LightningElement {
     @track botonGuardarDisabled = false;
     @track error = false;
     @track errorMessage = '';
+    @track errores = [];
+    _reset;
 
     // Gestiona el ID random pulsando el botón
     handleRandomID() {
@@ -65,20 +67,46 @@ export default class InfoPromo extends LightningElement {
     // Función que valida los datos 
     // TODO: mensaje concreto por cada tipo de error
     validateInfo(infoObject) {
-        const today = new Date();
+        let errores = [];
+        const hoy = new Date();
         const fechaInicioPromocion = new Date(infoObject.fechaInicio);
         const fechaFinalPromocion = new Date(infoObject.fechaFin);
-        if (
-            infoObject.codPromocion.length < 30 || 
-            infoObject.nombrePromocion.length < 10 ||
-            infoObject.nombrePromocion.length === 0 ||
-            fechaInicioPromocion > fechaFinalPromocion ||
-            fechaInicioPromocion < today.getTime() ||
-            infoObject.tiendas.length === 0
-            ) {
-            return false;
+
+        if(infoObject.codPromocion.length < 30) {
+            errores.push({id: 1, mensaje: 'La longitud del ID no puede ser menor de 30 caracteres'})
+        }  
+
+        if(infoObject.nombrePromocion.length < 10 || infoObject.nombrePromocion.length === 0) {
+            errores.push({id: 2, mensaje: 'El nombre de la promoción no puede estar vacío y debe tener más de 10 caracteres'})
         } 
-        return true; 
+
+        if(fechaInicioPromocion > fechaFinalPromocion) {
+            errores.push({id: 3, mensaje: 'La fecha inicial no puede ser mayor que la fecha de finalización'})
+        } 
+
+        if(fechaInicioPromocion < hoy.getTime()) {
+            errores.push({id: 4, mensaje: 'La fecha de inicio de la promoción no puede comenzar en el pasado'})
+        } 
+
+        if(infoObject.tiendas.length === 0) {
+            errores.push({id: 5, mensaje: 'Tiene que elegir al menos 1 tienda para aplicar la promoción'})
+        } 
+
+        if(infoObject.fechaFin === undefined || infoObject.fechaFin === '' || infoObject.fechaInicio === undefined || infoObject.fechaInicio === '') {
+            errores.push({id: 6, mensaje: 'Las fechas no pueden estar vacías'})
+        }
+
+        if(errores.length > 0) {
+            return {
+                error: true,
+                errors: errores
+            }
+        }
+
+        return {
+            error: false
+        }
+
     }
 
 
@@ -94,11 +122,11 @@ export default class InfoPromo extends LightningElement {
             activa: this.esSeleccionado
         }
 
-        const isValidInfo = this.validateInfo(infoPromo);
-        console.log(isValidInfo);
+        const validation = this.validateInfo(infoPromo);
+        console.log('ERRORES: ', validation);
         console.log(infoPromo);
 
-        if(isValidInfo) {
+        if(validation.error === false) {
 
             this.botonGuardarDisabled = true;
         
@@ -109,12 +137,31 @@ export default class InfoPromo extends LightningElement {
             this.dispatchEvent(infoGuardada);
 
             this.error = false;
+            this.errores = [];
 
         } else {
             this.error = true;
+            this.errores = validation.errors
             this.errorMessage = 'Asegúrese de que los campos contienen el formato correcto'
         }
         
+    }
+
+    // TODO: mejorar este reseteo..
+    get reset() {
+        return this._pageSize;
+    }
+
+    @api
+    set reset(value) {
+        if(value === true) {
+            this.codPromocion = '';
+            this.nombrePromocion = '';
+            this.fechaInicio = '';
+            this.fechaFin = '';
+            this.tiendasSeleccionadas = [];
+            
+        }
     }
 
 }

@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import { LightningElement, track } from 'lwc';
 
+// Importamos lo necesario para navegar en salesforce
+import { NavigationMixin } from 'lightning/navigation';
 
 // Importamos de la api la función de creación de records
 import { createRecord } from 'lightning/uiRecordApi';
@@ -19,11 +21,12 @@ import PROMO_FECHA_FIN from '@salesforce/schema/Promocion__c.fecha_fin__c';
 import PROMO_TIENDAS from '@salesforce/schema/Promocion__c.tiendas__c';
 import PROMO_REGLAS from '@salesforce/schema/Promocion__c.Regla__c';
 
-const API_ENDPOINT_CV_CREATE_PROMO = 'http://63ba1265.ngrok.io/';
+import videoayudapromo from '@salesforce/resourceUrl/videoayudapromo';
+
+const API_ENDPOINT_CV_CREATE_PROMO = 'https://localvenus.cashconverters.es/cv/promos';
 
 
-
-export default class App extends LightningElement {
+export default class App extends NavigationMixin(LightningElement) {
 
   informacionPromocion;
   reglasPromocion;
@@ -46,21 +49,54 @@ export default class App extends LightningElement {
   @track
   mostrarModalReset = false;
 
+  @track
+  mostrarDocumentacion = true;
+
+  @track
+  mostrarModalVideoAyuda = false;
+
+  @track
+  videoAyudaPromo;
+
+  @track
+  reset = false;
+
+  @track
+  promoID;
+
   // Gestiona el clic en el botón reset
   handleResetear() {
     this.mostrarModalReset = true;
-    this.template.querySelector('c-modal').show();
+    this.template.querySelector('.modal-reset').show();
     
   }
 
+  // Gestiona la confirmación de hacer el reset pulsando el botón en el modal
+  handleClicConfirmarReset() {
+    this.reset = true;
+    this.template.querySelector('.modal-reset').hide();
+  }
+
+  // Cancela el reset y quita el modal
   handleCancelarReset() {
     this.template.querySelector('c-modal').hide();
   }
 
-  // Gestiona el clic en el botón de reset
+  // Gestiona el clic en el menu al lado del reset
   handleSelectMenu(event) {
-    console.log(event.target)
-    // TODO: crear la funcionalidad que resetee todo la app de promociones
+    const elementoMenu = event.detail.value;
+    if(elementoMenu === 'Documentación') {
+      this.mostrarDocumentacion = true;
+      this.template.querySelector('.modal-documentacion').show();
+    } else if(elementoMenu === 'Vídeo Ayuda') {
+      this.mostrarModalVideoAyuda = true;
+      this.template.querySelector('.modal-video-ayuda').show();
+    }
+  }
+
+  handleToggleSection(event) {
+    const seccion = event.detail.openSections;
+    console.log(seccion)
   }
 
 
@@ -103,48 +139,64 @@ export default class App extends LightningElement {
 
     this.mostrarLoader = true;
 
-    // Creamos la promoción en Salesforce
-    createRecord(recordInput)
-    .then((resultado) => {
-      console.log('¡¡¡PROMO CREADA!!!!', resultado);
-      const toastCreacionOk = new ShowToastEvent({
-          title: '¡Promoción creada!',
-          message: 'Se ha creado correctamente su promoción',
-          variant: 'success',
-          mode: 'dismissable'
+    fetch(API_ENDPOINT_CV_CREATE_PROMO, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "X-Client-Auth": "2049BCD307338355385FF645CA857DBB"
+        },
+        body: JSON.stringify(data)
+      })
+      .then((resultadoCV) => {
+        console.log(resultadoCV);
+        if (resultadoCV.ok) {
+            return resultadoCV.json();
+        } 
+        throw new Error('Ha habido un error al crear la promoción en CV');
+      })
+      .then((resultado) => {
+        console.log('RESPUESTA FINAL:', resultado);
+        const respuesta = resultado.data;
+        console.log(respuesta);
+        return createRecord(recordInput)
+      })
+      .then((resultadoSalesforce) => {
+        console.log('¡¡¡PROMO CREADA!!!!', resultadoSalesforce);
+        const toastCreacionOk = new ShowToastEvent({
+            title: '¡Promoción creada!',
+            message: 'Se ha creado correctamente su promoción',
+            variant: 'success',
+            mode: 'dismissable'
+        });
+        this.mostrarLoader = false;
+        this.dispatchEvent(toastCreacionOk);
+        return resultadoSalesforce;
+      })
+      .then((resultadoInsercion) => {
+        console.log('RESULTADO INSERCIÓN: ', resultadoInsercion)
+        this.promoID = resultadoInsercion.id;
+        this[NavigationMixin.Navigate]({
+          type: 'standard__recordPage',
+          attributes: {
+              recordId: this.promoID,
+              objectApiName: 'Promocion__c', // objectApiName is optional
+              actionName: 'view'
+          }
+        });
+      })
+      .catch((error) => {
+        console.log('Error Ocurrido: ', error);
+        this.mostrarLoader = false;
+        this.mostrarError = true;
+        this.error = '¡Vaya! Parece que hubo algún error al crear la promoción. Inténtelo de nuevo.';
+        botonCrearPromo.disabled = false;
       });
-    
-      this.mostrarLoader = false;
-      this.dispatchEvent(toastCreacionOk);
-      return resultado;
-    })
-    .then((r) => {
-      console.log('RESULTADO INSERCIÓN: ', r)
-      return fetch(API_ENDPOINT_CV_CREATE_PROMO, { 
-        method: 'POST', 
-        headers: {'Content-Type': 'application/json'},
-        mode: 'cors',
-        body: JSON.stringify(data) 
-      });
-    })
-    .then((res) => {
-      return res.json();
-    })
-    .then((resultado) => {
-      console.log('RESPUESTA FINAL:', resultado);
-      const respuesta = resultado.data;
-      console.log(respuesta);
-      
-    })
-    .catch((error) => {
-      console.log('Error Ocurrido: ', error);
-      this.mostrarLoader = false;
-      this.mostrarError = true;
-      this.error = '¡Vaya! Parece que hubo algún error al crear la promoción. Inténtelo de nuevo.';
-      botonCrearPromo.disabled = false;
-    });
 
     // TODO: faltan las reglas de las promos en el campo 'reglas'
+  }
+
+  connectedCallback() {
+    this.videoAyudaPromo = videoayudapromo;
   }
 
 }
