@@ -1,0 +1,24 @@
+<template>
+    <lightning-card title="Bienvenido al panel de promociones">
+        <div class="slds-m-around_medium">
+            <lightning-button-group>
+                <lightning-button label="Crear una promoción"></lightning-button>
+                <lightning-button label="Ver todas las promociones" onclick={handleClicVerPromociones}></lightning-button>
+                <lightning-button label="Ver promociones activas"></lightning-button>
+                <lightning-button label="Enviar sugerencia" onclick={handleClicEnviarSugerencia}></lightning-button>
+            </lightning-button-group>
+        </div>
+    </lightning-card>
+    
+    <!-- Modal sugerencia de mejora -->
+    <c-modal header="Envíanos tus sugerencias para mejorar">
+        <div>
+            <lightning-textarea name="input1" label="Ayúdanos a mejorar la App"></lightning-textarea>
+        </div>
+        <div slot="footer">
+            <button class="slds-button slds-button_neutral" onclick={handleSubmitEnviarSugerencia}>Enviar Sugerencia</button>
+            <button class="slds-button slds-button_brand" onclick={handleClicCancelarSugerencia}>Cancelar</button>
+        </div>
+    </c-modal>
+
+</template>

@@ -7,7 +7,6 @@ export default class InfoPromo extends LightningElement {
     @track nombrePromocion = '';
     @track fechaInicio = '';
     @track fechaFin = '';
-    @track esSeleccionado = false;
     @track tiendasSeleccionadas = [];
     @track tiendaBuscada = '';
     @track tiendas = todasLasTiendas;
@@ -47,11 +46,6 @@ export default class InfoPromo extends LightningElement {
     handleChangeTienda(event) {
         const tienda = event.detail.value;
         this.tiendasSeleccionadas.push(tienda);
-    }
-
-    // Gestiona el botón de activar promoción
-    handleActivacion() {
-        this.esSeleccionado = !this.esSeleccionado;
     }
 
     // Gestiona la búsqueda de la tienda para simplificar la selección posterior

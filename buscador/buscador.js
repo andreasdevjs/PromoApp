@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import { LightningElement, track, api } from 'lwc';
-import arbolCategorias from './arbolCategorias.js'
+import niveles from '@salesforce/resourceUrl/niveles';
+import { loadScript } from 'lightning/platformResourceLoader';
+
 
 export default class Buscador extends LightningElement {
     
@@ -10,7 +12,19 @@ export default class Buscador extends LightningElement {
     @track error = false;
     todasCategorias = [];
     @track mostrarHasSeleccionado = false;
+    _niveles = []; // array con todos los niveles importados
 
+
+    // Getter público para obtener las categorías seleccionadas
+    @api
+    get obtenerCategorias() {
+        return this.categoriasSeleccionadas;
+    }
+
+    // Generar id únicos para los for each
+    get randomId() {
+        return this.handleRandomID();
+    }
 
     // Crea un ID único
     handleRandomID() {
@@ -28,8 +42,8 @@ export default class Buscador extends LightningElement {
     // Obtiene los resultados según lo que se vaya buscando dinámicamente
     buscarCategoriaEnArbol(textoIntroducido) {
 
-        let resultados = arbolCategorias.filter((resultado) => {
-            return resultado.name.toLowerCase().includes(textoIntroducido.toLowerCase())
+        let resultados = this._niveles.filter((resultado) => {
+            return resultado.descripcion.toLowerCase().includes(textoIntroducido.toLowerCase())
         })
         
         this.categoriasEncontradas = resultados;
@@ -62,59 +76,19 @@ export default class Buscador extends LightningElement {
         this.categoriasSeleccionadas = categoriasRestantes;
     }
 
-
-    /*
-    // Gestiona la llamada al árbol y se trae las categorías. Las mete en la propiedad todasCategorías que se inicializa vacío
-    cargarCategorias() {
-        fetch('https://hermes.cashconverters.es/tree/full', {
-            'method': 'GET',
-            'mode': 'no-cors',
-            'headers': {
-                'Content-Type': 'application/json',
-                'Authorization': 'f29668b65a8a74ab5e64f0778a0c456feb078639',
-                'Accept-Language': 'es-ES',
-                'User-Agent': 'HermesClient/puc'
-            }
-        }).then((response)=> {
-            console.log(response);
-        })
+    // Carga los niveles
+    async connectedCallback() {
+        await loadScript(this, niveles)
+        .then(() => { this._niveles = window.niveles; console.log(this._niveles) })
+        .catch(error => console.log('ERROR', error))
     }
 
-
-    // Método del ciclo de vida que se ejecuta cuando se haya conectado el componente
-    connectedCallback() {
-        this.cargarCategorias()
-    
-    }
-    */
-
-
-    // Getter público para obtener las categorías seleccionadas
-    @api
-    get obtenerCategorias() {
-        return this.categoriasSeleccionadas;
+    // Comprobar con cada renderización
+    renderedCallback() {
+        if(this.categoriasSeleccionadas.length === 0) {
+            this.mostrarHasSeleccionado = false;
+        }
     }
 
 
 }
-
-
-/* 
-
-// Obtiene los resultados según lo que se vaya buscando dinámicamente
-    buscarCategoriaEnArbol(textoIntroducido) {
-
-        let resultados = arbolCategorias.filter((resultado) => {
-            const regex = new RegExp(`^${textoIntroducido}`, 'gi');
-            return resultado.name.match(regex);
-        })
-        
-        this.categoriasEncontradas = resultados;
-
-        if(textoIntroducido.length == 0) {
-            this.categoriasEncontradas = [];
-        }
-
-    }
-
-*/

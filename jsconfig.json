@@ -50,6 +50,9 @@
             ],
             "c/vrcc": [
                 "vrcc/vrcc.js"
+            ],
+            "c/welcomePromo": [
+                "welcomePromo/welcomePromo.js"
             ]
         }
     },

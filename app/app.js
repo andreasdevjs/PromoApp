@@ -12,7 +12,6 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 // Importamos los campos y el objeto Promoción
 import PROMOCION_OBJECT from '@salesforce/schema/Promocion__c';
-import PROMO_ACTIVADA from '@salesforce/schema/Promocion__c.activada__c';
 import PROMO_COD from '@salesforce/schema/Promocion__c.cod_promocion__c';
 import PROMO_NOMBRE from '@salesforce/schema/Promocion__c.Name';
 import PROMO_TIPO from '@salesforce/schema/Promocion__c.tipo_promocion__c';
@@ -120,7 +119,7 @@ export default class App extends NavigationMixin(LightningElement) {
   handleCrearPromocion() {
     const data = { ...this.informacionPromocion, ...this.reglasPromocion };
     console.log(JSON.stringify(data));
-    const { codPromocion, nombrePromocion, fechaInicio, fechaFin, tiendas, activa, tipo, reglas } = data;
+    const { codPromocion, nombrePromocion, fechaInicio, fechaFin, tiendas, tipo, reglas } = data;
 
     const botonCrearPromo = this.template.querySelector('.crear-promo');
     botonCrearPromo.disabled = true;
@@ -128,7 +127,6 @@ export default class App extends NavigationMixin(LightningElement) {
     const fields = {};
     fields[PROMO_NOMBRE.fieldApiName] = nombrePromocion;
     fields[PROMO_COD.fieldApiName] = codPromocion;
-    fields[PROMO_ACTIVADA.fieldApiName] = activa;
     fields[PROMO_FECHA_INI.fieldApiName] = fechaInicio;
     fields[PROMO_FECHA_FIN.fieldApiName] = fechaFin;
     fields[PROMO_TIENDAS.fieldApiName] = JSON.stringify(tiendas);
@@ -157,8 +155,22 @@ export default class App extends NavigationMixin(LightningElement) {
       .then((resultado) => {
         console.log('RESPUESTA FINAL:', resultado);
         const respuesta = resultado.data;
-        console.log(respuesta);
-        return createRecord(recordInput)
+        console.log('Respuesta para manejar',respuesta);
+
+        if(respuesta.code === 1) {
+          return createRecord(recordInput);
+        } 
+
+        const { description } = respuesta.error;
+        const toastError = new ShowToastEvent({
+          title: 'Ha ocurrido un error',
+          message: description,
+          variant: 'error',
+          mode: 'dismissable'
+        });
+        this.dispatchEvent(toastError);
+        throw new Error('Ha habido un error al crear la promoción en CV');
+
       })
       .then((resultadoSalesforce) => {
         console.log('¡¡¡PROMO CREADA!!!!', resultadoSalesforce);

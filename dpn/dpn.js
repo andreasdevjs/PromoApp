@@ -6,7 +6,7 @@ export default class Dpn extends LightningElement {
     cantidad;
 
     @track 
-    tipoDescuento = '';
+    tipoDescuento;
 
     @track 
     guardarReglaDisabled = false;
@@ -30,10 +30,9 @@ export default class Dpn extends LightningElement {
     mostrarBotonSelector = false;
 
     @track
-    mostrarSelectorEnModal = false;
-
-    @track
     errores = [];
+
+    _categoriasSelector = [];
 
     // Gestiona el clic en los botones del menú para elegir buscador o el selector
     handleClicModo(event) {
@@ -51,13 +50,14 @@ export default class Dpn extends LightningElement {
 
     // Gestiona el clic en el botón que abre el selector en un modal
     handleAbrirSelector() {
-        this.mostrarSelectorEnModal = true;
         this.template.querySelector('c-modal').show();
     }
 
     // Gestiona el clic en el botón de terminar el modal del selector para coger las categorías
     handleTerminar() {
-        console.log('terminado');
+        const categoriasParaEnviar = this.template.querySelector('c-selector-visual').obtenerCategoriasPromocion;
+        this.template.querySelector('c-modal').hide();
+        this._categoriasSelector = [...categoriasParaEnviar];
     }
 
     // Gestiona el clic en el botón de ir atrás en el modal y cierra el modal
@@ -78,14 +78,15 @@ export default class Dpn extends LightningElement {
 
     // Función que valida los campos de la promoción y devuelve los errores correspondientes
     validateInfo(reglasDPN) {
+        console.log(reglasDPN)
         let errores = [];
         const { cantidad, tipoDescuento, niveles } = reglasDPN.reglas;
 
-        if(cantidad < 1 || cantidad === '' || cantidad === undefined) {
+        if(cantidad < 1 || cantidad === 0 || cantidad === undefined || isNaN(cantidad)) {
             errores.push({id: 1, mensaje: 'El descuento ha de ser mayor que 0'})
         }  
 
-        if(!tipoDescuento) {
+        if(isNaN(tipoDescuento)) {
             errores.push({id: 2, mensaje: 'Debes elegir 1 tipo de descuento'})
         } 
 
@@ -109,17 +110,25 @@ export default class Dpn extends LightningElement {
 
     // Gestiona la creación de las reglas de la promoción
     handleClickCrearPromocion() {
-        const categorias = this.template.querySelector('c-buscador').obtenerCategorias;
-        const nivelesCategorias = categorias.map((producto) => {
-            return producto.cod_nivel;
-        });
+
+        let categorias;
+
+        if(this._categoriasSelector.length > 0) {
+            categorias = this._categoriasSelector; 
+        } else {
+            const categoriasCompletas = this.template.querySelector('c-buscador').obtenerCategorias;
+            categorias = categoriasCompletas.map((categoria) => {
+                return categoria.cod_nivel;
+            });
+        }
+        
 
         const reglasPromocion = {
             tipo: 'dpn',
             reglas: {
-                cantidad: this.cantidad,
-                tipoDescuento: this.tipoDescuento,
-                niveles: nivelesCategorias
+                cantidad: Number(this.cantidad),
+                tipoDescuento: Number(this.tipoDescuento),
+                niveles: categorias
             }
         }
 
@@ -137,6 +146,7 @@ export default class Dpn extends LightningElement {
             this.dispatchEvent(reglaGuardada);
 
             this.error = false;
+            this.errores = [];
 
         } else {
             this.error = true;

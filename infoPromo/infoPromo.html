@@ -17,7 +17,6 @@
                         onchange={handleChangeCodPromocion}
                         placeholder="Ej. 892873221"
                         field-level-help="Es el ID de la promoción. Debe ser único y de 32 caracteres"
-                        required
                     ></lightning-input>
                     <lightning-button
                         label="Generar ID" 
@@ -33,7 +32,6 @@
                         onchange={handleChangeNombrePromocion}
                         placeholder="Promoción Bicicletas Eléctricas"
                         field-level-help="Elija un nombre descriptivo para la promoción. Min 10 / Max 100 caracteres"
-                        required
                     ></lightning-input>
                 </div>
             </div>
@@ -81,23 +79,6 @@
                 onchange={handleChangeTienda}
             ></lightning-dual-listbox>
         </div>
-
-        <!-- 
-        <div class="slds-p-around_x-small">
-            <label class="slds-form-element__label">Para formalizar la promoción, actívela.</label>
-            <lightning-button-stateful
-                label-when-off="Activar promoción"
-                label-when-on="¡Promoción activada!"
-                icon-name-when-off="utility:add"
-                icon-name-when-on="utility:check"
-                icon-name-when-hover="utility:close"
-                class="slds-m-top_medium"
-                selected={esSeleccionado}
-                onclick={handleActivacion}
-            ></lightning-button-stateful>
-        </div>
-        -->
-
         
         <template for:each={errores} for:item="error">
             <c-error key={error.id} error-message={error.mensaje}></c-error>

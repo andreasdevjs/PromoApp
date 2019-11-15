@@ -42,13 +42,18 @@ export default class Modal extends LightningElement {
         this.hide();
     }
 
+    /*
     handleSlotTaglineChange() {
         const taglineEl = this.template.querySelector("p");
         taglineEl.classList.remove(CSS_CLASS);
     }
+    */
 
+    /*
     handleSlotFooterChange() {
         const footerEl = this.template.querySelector("footer");
         footerEl.classList.remove(CSS_CLASS);
     }
+    */
+    
 }

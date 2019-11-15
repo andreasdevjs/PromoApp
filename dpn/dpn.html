@@ -46,15 +46,14 @@
                     </template>
 
                     <!-- Modal selector visual -->
-                    <template if:true={mostrarSelectorEnModal}>
-                        <c-modal header="Elija los niveles de la promoción">
-                            <c-selector-visual></c-selector-visual>
-                            <div slot="footer">
-                                <button class="slds-button slds-button_brand" onclick={handleTerminar}>Terminar</button>
-                                <button class="slds-button slds-button_neutral" onclick={handleIrAtras}>Ir atrás</button>
-                            </div>
-                        </c-modal>
-                    </template>
+                    <c-modal header="Elija los niveles de la promoción">
+                        <c-selector-visual></c-selector-visual>
+                        <div slot="footer">
+                            <button class="slds-button slds-button_brand" onclick={handleTerminar}>Terminar</button>
+                            <button class="slds-button slds-button_neutral" onclick={handleIrAtras}>Ir atrás</button>
+                        </div>
+                    </c-modal>
+
                 </div>
 
             </div>

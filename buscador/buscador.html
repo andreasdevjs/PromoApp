@@ -13,12 +13,12 @@
         <template for:each={categoriasEncontradas} for:item="categoria">
             <li 
                 class="resultado" 
-                data-value={categoria.name}
-                data-nivel={categoria.idLevel} 
+                data-value={categoria.descripcion}
+                data-nivel={categoria.cod_nivel} 
                 onclick={handleClicCategoria} 
-                key={categoria.idLevel}
+                key={randomId}
             >
-                {categoria.name}
+                {categoria.descripcion}
             </li>
         </template>
     </div>
@@ -29,7 +29,7 @@
 
     <template for:each={categoriasSeleccionadas} for:item="categoria">
         <lightning-pill
-            key={categoria.nombre} 
+            key={categoria.id} 
             label={categoria.nombre}
             data-value={categoria.nombre}
             onremove={handleRemoveCategoriaSeleccionada}
